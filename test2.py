@@ -100,7 +100,8 @@ esperado += payload
 assert esperado == recebido
 
 for segmento, _ in rede.fila:
-    _, _, _, ack, flags, _, _, _ = read_header(segmento)
+    ack_src_port, ack_dst_port, _, ack, flags, _, _, _ = read_header(segmento)
+    assert (ack_src_port, ack_dst_port) == (dst_port, src_port), 'As portas de origem/destino do servidor deveriam estar invertidas com relação às do cliente'
     assert 4*(flags>>12) == len(segmento), 'Este teste não gera envios: não deveria haver payloads'
     if (flags & FLAGS_ACK) == FLAGS_ACK:
         ack_list[ack] = None
