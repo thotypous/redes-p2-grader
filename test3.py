@@ -70,6 +70,7 @@ for i in range(5):
     payload = os.urandom(nseg*MSS)
     conexao.enviar(payload)
     for j in range(nseg):
+        assert len(rede.fila)+j <= nseg, f'Você deveria ter enviado no máximo {nseg} segmentos, mas enviou {len(rede.fila)+j}. Assegure-se que você não está respondendo ACKs com outros ACKs.'
         segmento, _ = rede.fila.pop(0)
         _, _, seq, ack, flags, _, _, _ = read_header(segmento)
         assert seq == ack_no
